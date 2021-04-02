@@ -55,10 +55,10 @@ if __name__ == '__main__':
 
     seed = 3
     np.random.seed(seed)
-    estimator = KerasRegressor(build_fn=create_model, epochs=30, batch_size=5000, verbose=0)
+    est = KerasRegressor(build_fn=create_model, epochs=30, batch_size=500, verbose=0)
 
     kfold = KFold(n_splits=3, random_state=seed)
-    value = cross_val_score(estimator, X, y, cv=kfold)
+    value = cross_val_score(est, X, y, cv=kfold)
 
     print('mean squared error: %.5f (%.5f) MSE' % (value.mean(), value.std()))
 
