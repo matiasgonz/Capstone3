@@ -12,7 +12,7 @@
 4. [Data Visualization](#data-visualization)
 5. [Model](#Model)
 6. [Conclusion](#conclusion)
-7. [Future Research](#future-research)
+7. [Notes](#notes)
 
 
 ## Goal of the Project
@@ -152,9 +152,9 @@ The graph is very left-skewed, meaning the distribution of our waves is mostly t
 
 To finish it off I decided to plot a scatter plot with wave_height and air_tempetaure to visualize their relationship. 
 
-<img src="">
+<img src="Visualizations/scatter_tempvsheight.png">
 
-
+We can gather from the scatter plot that there are a lot of errors in this dataset. We can see where the normal distribution was starting to form underneath all the noise. This is probably going to be very impactful when creating our model.
 
 ## Model
 I was very determined to use a neural network to make my predictions due to the sheer amount of data I was working with. I decided to use a sequential model with the basic 3 layers. Unfortunately due to time constraints I only had time for one model run with my complete sataset which took a whopping 8 hours to run. This means I had no time to tune my model or try to make any adjustments to it.
