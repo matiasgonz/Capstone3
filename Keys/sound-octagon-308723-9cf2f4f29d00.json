@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "sound-octagon-308723",
+  "private_key_id": "9cf2f4f29d00337662225b51e1033279a3f3a87f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCyIG+o6gVEyRb4\nnyR071hn03zCp42d1KBBNzk+RejAfSsVVXeWuwE2vCIeCUyv90r0wQ2Cjs9ACKg8\njm/L43ZJoXkZEvNLvbeqbKyeqePaWfPLOESBrR12cw4FnrrEt2S7ykfcnxtV10ZC\neALUZjceMo53Ap21fnNmsSPHIwE80lfscu3AAskLt3Bf6+zz0cnb3WpUgqGHNszt\nCjAnrigqR9WrPiWCjV5AvFOG9WUlioBq10HEwzD+NKfNOKZGAJ+2onNbVTxv5++Q\nvwv/wyHRWadOEowaxOJd2Bj5lYBkQUM2God0tQNEjKEqkiwZdqkDtqmjC/WBQSCt\nOinOuWOdAgMBAAECggEADh0Ke9m+/R+UawfrqDrmnaNgzpOJYaiyjI2cQtY124/k\nqqtmRFJ2MCi2k1FX+tafNnFYFAYjXwbQkwETfpYmjdhLc18lrn9OXs8phjtzyvM2\n9ofIyyA0+2j2WB+m22X53J8/E7ik6SebcNzNbJgvZHx2U/D9yfRGSdazPQNbBRSL\nZIFduBk0o/gMec9R/wAoCHNHTiLbrDcrTJRXfmgEiHK4HdJFMDyZDg0cn+AHS/VQ\nZkTR1SktAtsHfyGZ8z2Bb3jS+4gjUysgjgVhchinIMpaQGZB7U2gnfq7RZv3BGpE\ni1HIeRKLIDywUL919ShFzqjtkhGxyZiLOB1QwJ01QQKBgQDx52lVGBHkCN7dCVpf\nJlStOxWo/7onwUsS15CSBLc5DT1ebNSvYhIWGRmQamdzk3Ov/k4S271x+0OVpN4M\nvff1NWRySoLcrZLlcIUM2lCbZH0nAfmvhmyYW/7shEMoiGkHvQD9b5a9+FcbyRPL\nYUa5zvsowbd/K5yYb0tbipSYGQKBgQC8gaGYMH12bATTRWwP+PbMu04ProjSbYh+\nLhPCe7qs9lxPL3A/eiclDctRxVOUfgsHugI6FgAVpaFzNJ/2E2qLCTMaUqG4w48Q\nLrlZZEBG68kwl0V6jyyDrNItVDJVNe9jl0nMRTD+uheVvlIarr47tPm97jeUT61u\nilrUSMeoJQKBgCs0UorBLsjUkMFXn01pMixyZg72BZB+JGNsHsUFlJfa9n/73gyo\n7mQF/ZvedTWeO0ZOnDEgD/jgkJSUipgqAbRI4fTLvA2f7qGN9CV0hHsMepHR939S\n+ehIXgJuKPR/UIryRc/98yVgymYLBr8HU7Nx9Ue1OYm8B07uab4ixSFZAoGBAJqg\nQutRqzh+dp7OrUuUzu01H10hr73cdz/5j9/SGlhSZXnW0d5f1shAPm0+zcZadbXK\n0JTRAxS+nmaf3i690oFl9HM9IMcsMqf1i7hV0ZvbQVcIXseftcX09xqTnA3lhg5N\nRQ24G+52u23rhfG5MPZNBybSxuhzSzIHb2X+pTe5AoGARpUBt1ytOqOPfPcuHolQ\n7vri7cJ4VsrCMrs0XU/ftAIHhzEHtdn77fTEJyk0OUwt3CkK4wcA3QqDALIDwN6k\n3n1Pq582Dl3/5ZuNt0FROkGysCL0v1qqtPXF978suxklK/s3wKSsGIytnqLBW47r\nPXkt+UvhEPksl13OgP3aVsE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "matias-galvanize@sound-octagon-308723.iam.gserviceaccount.com",
+  "client_id": "113643828541852714322",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/matias-galvanize%40sound-octagon-308723.iam.gserviceaccount.com"
+}
