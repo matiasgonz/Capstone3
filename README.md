@@ -142,13 +142,18 @@ Let's move on to some data visualization so we can take a closer look at the dat
 
 <img src="Visualizations/heatmap.png">
 
-Let's move on to some data visualization so we can take a closer look at the data we are working with. First, lets look at the correlation between variables by using a correlation matrix
+As we cann se from out correlation  amtrix our variables are correlated but the streanght is not too high. The only two variables that have a high positive corrlation of aournd .60 are aire temperature and latitude. this makes snese since the further away you are from the equator the more extreme temperatures get. 
 
 Since the main goal of our project was to determine wave height I graphed a distribution plot of the wave heights found in our data.
 
 <img src="Visualizations/distplot_waveheight.png">
 
 The graph is very left-skewed, meaning the distribution of our waves is mostly toward the smaller side. After closer inspection, I can see that a little above 35% of our waves are less than 1 meter, and around 17% are around 2 meters. This means that our target of big waves is the minority of the distribution making this even harder. 
+
+To finish it off I decided to plot a scatter plot with wave_height and air_tempetaure to visualize their relationship. 
+
+<img src="">
+
 
 
 ## Model
