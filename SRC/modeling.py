@@ -62,4 +62,21 @@ if __name__ == '__main__':
 
     print('mean squared error: %.5f (%.5f) MSE' % (value.mean(), value.std()))
 
+    test_loss = []
+    test_accruacy = []
+    train_loss = []
+    train_accruacy = []
 
+    # for train, test in kfold.split(X.values, y.values):
+    #     history = estimator.fit(X.values[train], y.values[train], validation_data=(X.values[test], y.values[test]), epochs=30, batch_size=500, verbose=1)
+
+    # test_loss = np.asarray(test_loss)
+    # train_loss = np.asarray(train_loss)
+
+    # test_loss.append(history.history['val_loss'])    
+    # train_loss.append(history.history['loss'])
+
+    # train_loss_max = np.amax(train_loss)
+    # train_loss_min = np.amin(train_loss)
+    # test_loss_max = np.amax(test_loss)
+    # test_loss_min = np.amin(test_loss)

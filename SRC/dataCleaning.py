@@ -3,7 +3,7 @@ import os, sys
 from import_files import *
 
 #import csv using import_files.py
-dataframe = import_files(2007,2007)
+dataframe = import_csv(2007,2007)
 
 #drop columns
 dataframe.drop(columns=['year', 'month', 'day', 'hour', 'imma_version', 'attm_count', 

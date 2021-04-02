@@ -115,7 +115,7 @@ The dataset contains 75 individual features and has close to a billion entries. 
 | longitude           	| 0                  	|
 | sea_surface_temp    	| 39.6               	|
 | country_code        	| 93.7               	|
-| wind_speed          	| 97.9               	|
+| wind_speed          	| 95.9               	|
 | wind_direction_true 	| 0                  	|
 | amt_pressure_tend   	| 74.1               	|
 | air_temp            	| 5.5                	|
@@ -150,18 +150,17 @@ Since the main goal of our project was to determine wave height I graphed a dist
 
 The graph is very left-skewed, meaning the distribution of our waves is mostly toward the smaller side. After closer inspection, I can see that a little above 35% of our waves are less than 1 meter, and around 17% are around 2 meters. This means that our target of big waves is the minority of the distribution making this even harder. 
 
-<img src="Visualizations/scatterplot.png">
 
 ## Model
 I was very determined to use a neural network to make my predictions due to the sheer amount of data I was working with. I decided to use a sequential model with the basic 3 layers. Unfortunately due to time constraints I only had time for one model run with my complete sataset which took a whopping 8 hours to run. This means I had no time to tune my model or try to make any adjustments to it.
 
+Since my data is time-based we had to apply a time series train test split in order to respect time. this was done easily since we had a timestamp column. My model was not the best at predicting when the best surf time is going to be. I used kfold and mean squared error as a means of cross-validation. I got a score of 0.185, which s pretty high. this means our model is usaully around 18.5 percent incorrect.  
 
-### 
+I had a pretty low dropout rate for regularization which could have been tuned higher in order to account for specialization. In general, I would have liked a bit more time in order to work more on the model and get a better result from it. It was pretty hard to work on something that took 8 hours to run when the project had a one-week time constraint. 
 
 ## Conclusion
-One major stepback in this project was the amount of error present in the dataset. Upon further inspection, it seems that all of the indicators for accuracy have very high numbers meaning our data is not that accurate. 
+One major stepback in this project was the amount of error present in the dataset. Upon further inspection, it seems that all of the indicators for accuracy have very high numbers meaning our data is not that accurate. Looking back at my steps I would have liked ot keep the wind_speed column. Even though we were going to lose a lot of data we had enough data to simply drop around 96 percent of it. It would have probably been beneficial to the project as a whole as it would have probably diminished our run times. 
 
-## Future Research
-look into monte carlo augmentation in order to work with wind_speed 
-use another model in order to be able to generate mroe runs and optimize it 
-Chris suggested i change datasets and i should have listened, this was veruy difficult to wokr with due to its sheer size and our time limitation in order to run it
+## Notes
+My biggest note is Chris suggested I change datasets and I should have listened, this was very difficult to work with due to its sheer size and our time limitation when running it.
+Look into monte Carlo augmentation in order to work with wind_speed.
