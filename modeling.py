@@ -44,7 +44,7 @@ def create_model():
 
 if __name__ == '__main__':
 
-    dataframe = import_csv(2007,2017,True)
+    dataframe = import_csv(2007,2008,True)
 
     dataframe_time = dataframe[['wind_direction_true', 'amt_pressure_tend', 'air_temperature', 'sea_level_pressure', 'wave_height']].copy()
 

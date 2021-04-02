@@ -9,12 +9,11 @@
 1. [Project Goal](#Goal-of-the-Project)
 2. [The Data](#the-data)
 3. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
-4. [Topic Modeling](#topic-modeling)
-5. [Other Interesting Findings](#other-interesting-findings)
+4. [Data Visualization](#data-visualization)
+5. [Model](#Model)
 6. [Conclusion](#conclusion)
 7. [Future Research](#future-research)
-8. [Appendix #1: Technologies & Techniques Used](#appendix-1-technologies--techniques-used)
-9. [Appendix #2: Project Organization](#appendix-2-project-organization)
+
 
 ## Goal of the Project
 
@@ -108,390 +107,61 @@ First, lets take a look at all of the featires and thier data types.
 | intermediate_reject_flag  	| INT       	|
 | timestamp                 	| OBJ       	|
 
-The dataset contains 75 individual features where most 
+The dataset contains 75 individual features and has close to a billion entries. This is a huge dataset that is feature-heavy and has a lot of data points. To simplify the project and make it feasible to run on a commmon machine we had to cut the dataset by a great amount. My next idea was to look at the NaN's since maybe dropping those could provide a workable dataset. This is what some key feature percent of NaN's per columns looks like. 
 
-<sub><b></b> arXiv Papers by Subject </sub>
+| Feature Name        	| % NaN's per column 	|
+|---------------------	|--------------------	|
+| latitude            	| 0                  	|
+| longitude           	| 0                  	|
+| sea_surface_temp    	| 39.6               	|
+| country_code        	| 93.7               	|
+| wind_speed          	| 97.9               	|
+| wind_direction_true 	| 0                  	|
+| amt_pressure_tend   	| 74.1               	|
+| air_temp            	| 5.5                	|
+| sea_level_pressure  	| 7.3                	|
+| wave_direcion       	| 100                	|
+| wave_height         	| 89.9               	|
+| wave_speed          	| 97.5               	|
+| swell_height        	| 98.8               	|
+| swell_speed         	| 100                	|
+| timestamp           	| 0                  	|
 
-As you can see, the majority of the papers published on arXiv are physics papers—although according to their own analysis, this might be changing with the rise of machine learning. (See https://arxiv.org/help/stats/2018_by_area/index for more.)
+After taking a look at the NaN's my biggest or major observations were:
 
-What I was really interested in was the research papers specifically related to machine learning. I filtered the data down to just these papers by finding all papers that had "machine learning" as part of one of the subjects listed. There were 48,564 such papers, which accounted for about 3% of the total number of papers pulled from the site. The distribution of the subjects listed for these papers is shown below.
+    1. I will be favoring using latitude and longitude over country code since it complete
+    2. I will have to drop wind_speed, swell_height, wave_direction and swell_speed, from the data, since there are way too many NaNs meaning it is mostly incomplete or not precise data	
+    3. I can ignore the other date columns and only use the timestamp 
+    4. Since I am trying to predict wave_height this will be the biggest contributor to row dropping. 
 
-<img src="images/top_twenty_machine_learning_subjects.png" alt="machine learning paper subjects">
+After dropping all of the unnecessary columns and limiting our row numbers based on dropping all the NaNs we have a workable dataset. I decided to export this final data frame to individual CSV's per year for ease of running and testing. 
 
-<sub><b></b> Machine Learning Paper Subjects </sub>
+## Data Visualization
 
-Although the two subjects with "machine learning" in them are at the top of the list (which we would expect), the subsequent top subjects give us some view into what various subfields of machine learning might be: computer vision, language, optimization, robotics, etc.
+Let's move on to some data visualization so we can take a closer look at the data we are working with. First, lets look at the correlation between variables by using a correlation matrix
 
-This subset of over 48,000 paper descriptions was the corpus that I worked with after this point.
+<img src="Visualizations/heatmap.png">
 
-### Machine Learning Papers Over Time
+Let's move on to some data visualization so we can take a closer look at the data we are working with. First, lets look at the correlation between variables by using a correlation matrix
 
-One of the most startling results from this analysis was also one of the simplest: looking at the number of machine learning papers published over time.
+Since the main goal of our project was to determine wave height I graphed a distribution plot of the wave heights found in our data.
 
-<img src="images/machine_learning_papers_over_time.png" alt="machine learning papers published over time">
+<img src="Visualizations/distplot_waveheight.png">
 
-<sub><b></b> Machine Learning Papers Published Over Time </sub>
+The graph is very left-skewed, meaning the distribution of our waves is mostly toward the smaller side. After closer inspection, I can see that a little above 35% of our waves are less than 1 meter, and around 17% are around 2 meters. This means that our target of big waves is the minority of the distribution making this even harder. 
 
-There are only 33 papers from before the year 2000 with the subject of machine learning, and until 2007 there were less than 100 new papers per year. In 2007, there were 122 new machine learning papers—in 2012, there were 1,629—and in 2019 so far, there have been 14,504 new papers on machine learning. (And still have over two months left in the year!)
+<img src="Visualizations/scatterplot.png">
 
-It's hard to underscore how significant of a shift this is. Not only has machine learning already had a monumental impact on society, but each year more time and energy is devoted to developing it as a field. It's hard to imagine what the next ten to twenty years are going to bring with this kind of investment being poured into machine learning.
+## Model
+I was very determined to use a neural network to make my predictions due to the sheer amount of data I was working with. I decided to use a sequential model with the basic 3 layers. Unfortunately due to time constraints I only had time for one model run with my complete sataset which took a whopping 8 hours to run. This means I had no time to tune my model or try to make any adjustments to it.
 
-And, fittingly, this underscores the need for applying techniques like machine learning to understand the field of machine learning!
 
-## Topic Modeling
-
-The heart of the analysis involving using the natural language processing (NLP) technique of topic modeling to discover latent topics in the corpus of research paper descriptions. (Note: I didn't include the paper titles in my model, although I did display them as part of the analysis of my topics.) By using topic modeling to understand the research papers, I was essentially trying to discover cohesive subfields of machine learning. I used the technique of non-negative matrix factorization (NMF) to accomplish this.
-
-### Text Featurization and Model Hyperparameters
-
-I was able to achieve surprisingly good results with very little preprocessing or fine-tuning. The steps shown below comprised my primary analysis pipeline for the majority of the project.
-
-1. **TfidfVectorizer** — First, I converted the paper descriptions into tf-idf vectors using scikit-learn's TfidfVectorizer. I removed stop words as part of this process.
-2. **NMF Model** — Then, I fit an NMF model using the number of topics I was interested in fitting. For the majority of the analysis, I looked at 10 topics and got good results—however, I also looked at 3, 15, 20, and 30 topics, which gave additional insight into the data.
-3. **Topic Modeling Matrices** — Finally, I used the factored matrices `W` (the document-topic matrix) and `H` (the vocabulary-topic matrix) to look at the relationship between the text and the latent topics I had extracted.
-
-Although I usually would have done more feature engineering through word lemmatization, custom stop words, or vocabulary reduction, I was surprised to find that my NMF model didn't appear to need it to return very good results.
-
-### 10 Topics - Relevant Words
-
-So what topics was I able to discover? Using an NMF hyperparameter of 10 topics, these were the words most indicative of the topics:
-
-| Topic Number | Subjective Topic Name | Topic Words |
-| --- | --- | --- |
-| 0 | machine learning / time series | data learning machine time real analysis methods series classification sets |
-| 1 | gradient / optimization / convergence | optimization gradient convex matrix convergence stochastic problems method rank descent |
-| 2 | neural networks / deep learning | neural networks network deep training layer convolutional layers architecture architectures |
-| 3 | reinforcement learning | learning policy reinforcement agent rl agents control policies tasks reward |
-| 4 | variational bayesian | model models inference latent bayesian variational variables distribution gaussian posterior |
-| 5 | graphs / graph ML | graph graphs node nodes embedding structure edges network embeddings spectral |
-| 6 | ML attacks / GANs | adversarial attacks examples attack training robustness perturbations generative gan gans |
-| 7 | image / text / classification | image task classification domain features images tasks model feature text |
-| 8 | clustering | clustering clusters cluster means algorithm spectral data algorithms points mixture |
-| 9 | algorithms / regret / optimization | algorithm regret bounds bound problem optimal sample algorithms complexity lower |
-
-Although a couple of these topics don't seem as clear (e.g. topics 0 and 9), most of these topics are fairly cohesive and give insight into the development of machine learning as a field over the last 20 years.
-
-Additionally, there's at least one topic that is a bit mixed or confused: topic #6 appears to be about both vulnerabilities of machine learning algorithms ("adversarial attacks") and generative adversarial networks (GANs). Since both of these topics rely heavily on the term "adversarial", this topic appears to be a mixture of the two concepts.
-
-### 10 Topics - Relevant Papers / Documents
-
-For each one of these topics that we've discovered in the corpus of paper descriptions, there are certain papers that "load" most heavily on that topic—in other words, they contain words that are strongly related to that topic.
-
-For the **Neural Networks and Deep Learning** topic, here are the titles of the papers that load most heavily on that topic:
-
-| Most Relevant Papers: "Neural Networks / Deep Learning" |
-| --- |
-| Deep Neural Network Approximation using Tensor Sketching |
-| A Survey: Time Travel in Deep Learning Space: An Introduction to Deep Learning Models and How Deep Learning Models Evolved from the Initial Ideas |
-| Deep Recurrent Convolutional Neural Network: Improving Performance For Speech Recognition |
-| Deep Adaptive Network: An Efficient Deep Neural Network with Sparse Binary Connections |
-| Deep Fried Convnets |
-
-For the **Reinforcement Learning** topic, here are the paper titles:
-
-| Most Relevant Papers: "Reinforcement Learning" |
-| --- |
-| Is a Good Representation Sufficient for Sample Efficient Reinforcement Learning? |
-| Dealing with Non-Stationarity in Multi-Agent Deep Reinforcement Learning |
-| Scalable Centralized Deep Multi-Agent Reinforcement Learning via Policy Gradients |
-| Meta reinforcement learning as task inference |
-| Multi-Task Policy Search |
-
-And for the **Graphs and Graph ML** topic (one of my favorites! See my previous project on graphs: [Finding Patterns in Social Networks Using Graph Data](https://github.com/stevenrouk/social-network-graph-analysis)), here are the titles:
-
-| Most Relevant Papers: "Graphs and Graph ML" |
-| --- |
-| A simple yet effective baseline for non-attributed graph classification |
-| A Unified Framework for Structured Graph Learning via Spectral Constraints |
-| Adaptive Graph Convolutional Neural Networks |
-| Triple2Vec: Learning Triple Embeddings from Knowledge Graphs |
-| Adversarially Regularized Graph Autoencoder for Graph Embedding |
-
-### 10 Topics - Document Analyses
-
-If we wanted to analyze a specific document according to these topics and the relevant words, we can do that too. Here's an analysis of the "Graph Convolutional Reinforcement Learning" paper using these 10 topics:
-
-<img src="images/document_topic_analysis.png" alt="analysis of topic loadings for a single document">
-
-<sub><b></b> Topic Analysis of "Graph Convolutional Reinforcement Learning" </sub>
-
-And here's what it looks like when we highlight the words in this paper that are the most relevant to each topic:
-
-<img src="images/word_colors_1.png" alt="document words analyzed by color">
-
-<img src="images/word_colors_2.png" alt="document words analyzed by color">
-
-<img src="images/word_colors_3.png" alt="document words analyzed by color">
-
-<img src="images/word_colors_4.png" alt="document words analyzed by color">
-
-<sub><b></b> Word Analysis of "Graph Convolutional Reinforcement Learning" </sub>
-
-### 10 Topics - Evolution Over Time
-
-And now, we're at a place where we can answer one of the original questions I was wondering about what I started this project: how has the field of machine learning changed over time? Armed with our ten topics and a fairly good understanding of what these topics represent, we can see how these topics have evolved over the last 20 years.
-
-<img src="images/test-all-boxplots.png">
-
-<sub><b></b> Change in Topic Loading Distributions Over Time </sub>
-
-Here are some of the most interesting findings:
-
-1. The explosion of interest in neural networks and deep learning. These models have been responsible for much of the news-worthy progress we've seen in the last few years, and these approaches are becoming more feasible with time and computing power increases and we figure out how to leverage GPUs for much faster processing of matrices.
-2. The growth of the GAN / ML attack category. It would take a little more teasing apart to see which of those two areas was most responsible for this growth, although both topics have seen more interest in recent years. (And GANs were only invented in 2014.)
-3. The subtle downturn of topics like optimization, clustering, and a few other topics.
-
-## Other Interesting Findings
-
-### 20 Topics
-
-Some other interesting topics show up if we use 20 topics. Here were some of the additional topics that came out of using an NMF model with 20 topics:
-
-- matrices
-- feature selection
-- kernel methods / Hilbert space
-- NLP
-- domain adaptation / transfer learning
-- audio / speech recognition
-
-<img src="images/all-boxplots-20-topics.png">
-
-<sub><b></b> Change in Topic Loading Distributions Over Time </sub>
-
-It's interesting to see which of these topics have exploded in recent years (e.g. anything related to neural nets), and which went through swells and declines (e.g. matrices, kernels).
-
-### Three Topics Per Year
-
-If we restrict ourselves to only three latent topics, and we run a model for every year since 2000, some interesting results show up. Following are the words for the three topics for all years between 2000 and 2019. It appears that 2019 is the year of the graph!
-
-| 2000 | 2001 |
-| --- | --- |
-| data information learning fuzzy model systems noise complexity modeling theory | sentences corpus algorithm parts constituents ovis information et al atis |
-| aixi formally problem universal tl solves distribution theory agent sequence | random study stable laws roots turn harmonic leads matrices polynomials |
-| spam mail naive filters filter performance bayesian keyword anti patterns | policy learning observable based value partially domains mu data approach |
-
-| 2002 | 2003 |
-| --- | --- |
-| keyphrases genex 97 task algorithm document generated experiments c4 set | prediction mu xi nu bayes sequence environments l_ universal based |
-| context problem strategies training domain weather domains set features sensitive | learning information algorithm control chances semantic function problem em data |
-| learning data algorithm bias semantic information algorithms orientation accuracy using | controller neural genetic failure safe free algorithms hybrid pendulum inverted |
-
-| 2004 | 2005 |
-| --- | --- |
-| learning time algorithm models markov function paper series based method | prediction loss class benchmark bound observations algorithm mdl forecasting space |
-| mdl prediction universal bayes classes convergence class loss sequence countable | distributed models information algorithm network learning classification model neural technique |
-| semantic information distribution similarity mutual level content data applications hylos | experts expert master actions adversary universal specify algorithm problems algorithms |
-
-| 2006 | 2007 |
-| --- | --- |
-| learning method data algorithm approach model based user using results | model learning algorithm distribution complexity generalization random problem error prediction |
-| stochastic languages rational dees ma automata study class probabilistic multiplicity | technique cover adopted 1a1 1aa land svms mapping classification approaches |
-| prediction strategy loss strategies class universal continuous line measures stationary | data analysis clustering methods method variables parameters number real sparse |
-
-| 2008 | 2009 |
-| --- | --- |
-| lasso model models selection variables regression estimator sample random dimensional | learning data algorithm algorithms model based method time new problem |
-| data clustering algorithms points network networks quantum results model proposed | regression selection linear kernel variables lasso dimensional models sparse model |
-| learning algorithm method classification kernel problem performance methods information task | matrix rank entries algorithm low problem matrices completion subset collaborative |
-
-| 2010 | 2011 |
-| --- | --- |
-| method classification data kernel feature sparse features regression based methods | data learning model clustering models based approach method classification kernel |
-| clustering data model models graph inference latent graphical networks clusters | regret policy learning online optimal algorithm problem reward bandit bounds |
-| learning algorithm problem regret online algorithms functions policy function bounds | matrix rank sparse norm lasso low recovery convex problem optimization |
-
-| 2012 | 2013 |
-| --- | --- |
-| sparse problem algorithm optimization convex matrix problems function algorithms convergence | model models bayesian data inference variables parameters approach latent likelihood |
-| models model bayesian inference variables latent structure network networks data | matrix algorithm problem sparse convex rank optimization bounds algorithms convergence |
-| data learning classification feature based clustering method features methods proposed | learning data classification features training methods feature clustering algorithms method |
-
-| 2014 | 2015 |
-| --- | --- |
-| algorithm learning algorithms optimization problem function problems stochastic bounds optimal | data model models clustering inference method methods based bayesian approach |
-| model data models network learning networks features classification training deep | deep neural networks learning network training convolutional image model tasks |
-| matrix rank clustering low data norm completion sparse matrices algorithm | algorithm convex optimization problem algorithms matrix problems stochastic learning function |
-
-| 2016 | 2017 |
-| --- | --- |
-| data model models method based methods learning approach kernel clustering | data model models learning approach method based methods graph features |
-| neural networks network deep learning training convolutional image tasks recurrent | algorithm gradient optimization algorithms stochastic problem convex convergence problems matrix |
-| algorithm optimization convex algorithms gradient convergence problem stochastic problems non | networks neural deep network training learning adversarial convolutional tasks image |
-
-| 2018 | 2019 |
-| --- | --- |
-| learning data model network deep neural models networks training based | data model models learning training network neural deep networks image |
-| algorithm gradient optimization algorithms problem function stochastic convergence convex problems | algorithm learning algorithms policy optimization problem gradient function optimal problems |
-| adversarial attacks examples attack training networks robustness perturbations gan generative | graph graphs node embedding nodes embeddings network representation structure networks |
-
-### Querying Loadings
-
-What if we ask the question, "which paper is most closely aligned with a certain combination of topics?" For example, we might be interested in the paper that is most purely about graph ML and not much else. We can query our results by specifying the loading combination we're interested in and seeing which document is closest (via cosine similarity) to that query:
-
-```
-Loadings:
-
-**************************************************
->>> [[0. 0. 0. 0. 0. 1. 0. 0. 0. 0.]]
-**************************************************
-
-Most Similar Papers:
-
->>> Triple2Vec: Learning Triple Embeddings from Knowledge Graphs
->>> Topology Based Scalable Graph Kernels
->>> Fast Haar Transforms for Graph Neural Networks
->>> Tripartite Heterogeneous Graph Propagation for Large-scale Social Recommendation
->>> Are Powerful Graph Neural Nets Necessary? A Dissection on Graph Classification
-```
-
-### Paper Recommender
-
-We can also create a simple research paper recommender system based on the papers that people are interested in. Given a research paper that someone enjoyed (or maybe they didn't enjoy it, but they need to learn more about the topic anyway), we can return other similar papers.
-
-For example, what are the closest papers to "Evolving controllers for simulated car racing"?
-
-```
-Original Paper:
-
-**************************************************
->>> Evolving controllers for simulated car racing
-**************************************************
-
-Most Similar Papers:
-
->>> N2N Learning: Network to Network Compression via Policy Gradient Reinforcement Learning
->>> Neural Network Memory Architectures for Autonomous Robot Navigation
->>> Learning by Stimulation Avoidance: A Principle to Control Spiking Neural Networks Dynamics
->>> Efficient Architecture Search by Network Transformation
->>> Deep Recurrent Q-Learning vs Deep Q-Learning on a simple Partially Observable Markov Decision Process with Minecraft
-```
-
-### Macro Subject Predictor
-
-I wanted to get at least a little predictive modeling in here (just for fun), so I trained a Naive Bayes classifier on the "macro" subjects for the full 1.6 million paper corpus—in other words, using the description of a paper to predict if that paper was related to physics, math, computer science, statistics, etc.
-
-Without much tuning, I got an accuracy of almost 90% on unseen data (89.4%)—pretty good for a first go!
-
-### Differentiating Terms for Macro Subjects
-
-| CS, but not Math | Math, but not CS | Statistics, but not Math |
-| --- | --- | --- |
-| algorithm | prove | data |
-| data | space | models |
-| network | group | methods |
-| based | theory | analysis |
-| information | finite | approach |
-| proposed | function | based |
-| channel | give | algorithm |
-| systems | result | distribution |
-| networks | functions | proposed |
-| used | g | regression |
-| algorithms | algebra | used |
-| each | equation | statistical |
-| performance | equations | estimation |
-| approach | class | bayesian |
-| present | x | use |
-
-### K-Means Clustering and t-SNE
-
-K-means is considered a "hard clustering" algorithm because, unlike topic modeling using NMF, data points can only belong to one cluster. K-means clustering revealed fairly similar cluster topics to NMF. Plotting the two-dimensional t-SNE representation of the clusters (using a randomly sampled subset of the data) reveals that some clusters are much more distinct than others.
-
-<img src="images/kmeans_clustering.png">
-
-<sub><b></b> t-SNE representation of K-Means Clusters </sub>
-
-Cluster 1 (the orange cluster isolated in the top of the graph) relates to reinforcement learning and robotics, Cluster 0 (dark blue in bottom left) relates to graphs and graph machine learning, and Cluster 9 (light blue in bottom center) relates to clustering.
-
-(Note: The one data point way out there in the bottom left had a blank description, which accounts for it being so different from the other papers.)
+### 
 
 ## Conclusion
-
-Not only was this project interesting from a technical perspective, but I was incredibly curious about the results of the analysis as well because of my work in data science and machine learning. Through the application of NLP techniques, I've created a handy tool for myself (and hopefully a useful analysis for others!) to serve as a guide for various topics and subfields of machine learning. (I know I'll be diving more into neural networks in the coming months—something I've been intending to do for a while anyway.) I've also rekindled an interest in keeping up with the latest research papers coming out.
+One major stepback in this project was the amount of error present in the dataset. Upon further inspection, it seems that all of the indicators for accuracy have very high numbers meaning our data is not that accurate. 
 
 ## Future Research
-
-Here are some ideas for future research in this area:
-
-1. Bring in information about citation networks to see which papers are most cited, and how the topics of those papers are related to the overall evolution of the topic distributions I discovered.
-2. Identify which papers were the most ahead of their time (and possibly influential), in that they directly predated a surge of interest in an area.
-3. Analyze the distribution of authors of papers as it relates to topics.
-4. Create a better predictive model. Potentially try to predict sub-categories (such as the "subjects" field categories).
-5. Look at which terms differentiate various topics from each other. I did this for macro subjects, but would be interested in applying this technique to subfields of machine learning.
-
-## Appendix #1: Technologies & Techniques Used
-
-Technologies:
-- Python
-- pandas
-- scikit-learn
-- NumPy
-- Jupyter Notebooks
-- matplotlib
-
-Techniques:
-- Natural language processing
-- Topic modeling
-- tf-idf matrices
-- Non-negative matrix factorization
-- Clustering (K-Means)
-- Naive Bayes classifier
-- t-SNE
-
-## Appendix #2: Project Organization
-
-This was the first project that I tried using the Data Science Cookie Cutter template for, and I think it helped the project organization overall! (Of course my code still exploded in the middle as I dove headlong into the analysis...)
-
-Here's a rough organization of how the project is setup. (It doesn't follow this template exactly, but it's fairly close.)
-
-
-------------
-
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
-
-
---------
-
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+look into monte carlo augmentation in order to work with wind_speed 
+use another model in order to be able to generate mroe runs and optimize it 
+Chris suggested i change datasets and i should have listened, this was veruy difficult to wokr with due to its sheer size and our time limitation in order to run it
