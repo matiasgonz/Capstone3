@@ -6,7 +6,7 @@
 ---
 
 ## Table of Contents
-1. [Project Goal](#Goal)
+1. [Project Goal](#Goal-of-the-Project)
 2. [The Data](#the-data)
 3. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
 4. [Topic Modeling](#topic-modeling)
@@ -22,36 +22,93 @@ Have you ever been next to a beautiful beach but as soon as you take out your ph
 
 
 ## The Data
+The most comprehensive dataset I could find was The International Comprehensive Ocean-Atmosphere Data Set or ICOADS (https://icoads.noaa.gov). This dataset contains global ocean marine meteorological and surface data. It is formed by merging many national and international data sources that contain measurements and visual observations from ships, buoys, coastal stations, and other platforms. This dataset is publicly available through Google's BigQuery API and was accessed using the Python client library. 
 
-To get a sense of the evolution of machine learning, I turned to the research paper hosting website [arXiv.org](https://arxiv.org/) (which is a service of Cornell University), a site which bills itself as "Open access to 1,605,550 e-prints in the fields of physics, mathematics, computer science, quantitative biology, quantitative finance, statistics, electrical engineering and systems science, and economics." (Note: Thanks to [github.com/niderhoff/nlp-datasets](https://github.com/niderhoff/nlp-datasets) for pointing me in the right direction when I was looking for datasets.)
+### Pulling and Proccesing the Data
+After installing the required google BigQuery libraries, you can access this dataset by creating a project on the Cloud Console and adding the dataset to the project.  After connecting your bq command line to your project you can simply run SQL queries in conjunction with python code to pull in the data. The imported data comes in Google's proprietary Table object data type but can be transferred over to a Pandas data frame for ease of use. The dataset contains data from 1662 to 2017, so we decided to pull in the most recent 10 years to aid in data precision and cut the huge file size down to 60 GB. 
 
-<img src="images/arXiv.png" alt="arXiv.org">
-
-<sub><b></b> arXiv.org </sub>
-
-ArXiv graciously makes the metadata for their whole collection of research papers available through an open API, which meant that I could download descriptions for all 1.6 million papers. For a single API call, the metadata was returned as an XML object with 1000 records, where each record looked like this:
-
-<img src="images/arXiv_XML.png" alt="arXiv XML example">
-
-<sub><b></b> Research Paper XML Record </sub>
-
-### Pulling the Data
-
-The first task was to pull all of the metadata and store it locally for analysis. A quick back-of-the-napkin calculation told me I should expect the full data pull to run about 3 GB in size, so I chose to store each response as a raw XML text file initially for later processing and analysis. In total, I made over 1,600 API calls over the course of 24 hours to pull all of the data.
-
-### Processing the Data
-
-While the full dataset was downloading, I wrote scripts to process the XML data into a series of structured CSV files with just the information I wanted: id, url, title, set, subjects, authors, date, and description. I ended up primarily using title, set, subjects, date, and description in my analysis, although I would like to conduct further analysis using authors.
-
-After processing the XML files to individual CSVs, I used another script to combine all of these CSVs into a single CSV that could be directly loaded as a pandas DataFrame. I created another CSV file with just research papers that had the phrase "machine learning" in one of their subjects.
-
-The final processed CSV file ended up being 1.7 GB, and the machine learning subset CSV file ended up as 81 MB. (This was down from a raw data size of 3.1 GB.)
+BigQuery limits your download to 1 GB or 16,000 rows so I had to use loops to download all of the data and then make individual CSV's of the downloaded section. I ended up creating around 550 individual CSV files for all of my data. Another loop was then implemented to pull in all of the individual CSV's and merge them into one Panda Dataframe. 
 
 ## Exploratory Data Analysis (EDA)
 
-First, I looked at the general distribution of papers by subject on arXiv.
+First, lets take a look at all of the featires and thier data types. 
 
-<img src="images/number_of_papers_per_subject_macro.png" alt="arXiv papers by subject">
+| Feature Name              	| Data Type 	|
+|---------------------------	|-----------	|
+| year                      	| INT       	|
+| month                     	| INT       	|
+| day                       	| INT       	|
+| hour                      	| FLOAT     	|
+| latitude                  	| FLOAT     	|
+| longitude                 	| FLOAT     	|
+| imma_version              	| INT       	|
+| attm_count                	| INT       	|
+| time_indicator            	| INT       	|
+| latlong_indicator         	| INT       	|
+| ship_course               	| INT       	|
+| ship_speed                	| INT       	|
+| national_source_indicator 	| INT       	|
+| id_indicator              	| INT       	|
+| callsign                  	| STR       	|
+| country_code              	| STR       	|
+| wind_direction_indicator  	| INT       	|
+| wind_direction_true       	| INT       	|
+| wind_speed_indicator      	| INT       	|
+| wind_speed                	| FLOAT     	|
+| visibility_indicator      	| INT       	|
+| visibility                	| INT       	|
+| present_weather           	| INT       	|
+| past_weather              	| INT       	|
+| sea_level_pressure        	| FLOAT     	|
+| characteristic_of_ppp     	| INT       	|
+| amt_pressure_tend         	| FLOAT     	|
+| wbt_indicator             	| INT       	|
+| wetbulb_temp              	| FLOAT     	|
+| dpt_indicator             	| INT       	|
+| dewpoint_temp             	| FLOAT     	|
+| sst_measurement_method    	| INT       	|
+| sea_surface_temp          	| FLOAT     	|
+| total_cloud_amount        	| INT       	|
+| lower_cloud_amount        	| INT       	|
+| lower_cloud_type          	| STR       	|
+| cloud_height_indicator    	| INT       	|
+| cloud_height              	| STR       	|
+| middle_cloud_type         	| STR       	|
+| high_cloud_type           	| STR       	|
+| wave_direction            	| INT       	|
+| wave_period               	| INT       	|
+| wave_height               	| FLOAT     	|
+| swell_direction           	| INT       	|
+| swell_period              	| INT       	|
+| swell_height              	| FLOAT     	|
+| box_system_indicator      	| STR       	|
+| ten_degree_box_number     	| INT       	|
+| one_degree_box_number     	| INT       	|
+| deck                      	| INT       	|
+| source_id                 	| INT       	|
+| platform_type             	| INT       	|
+| dup_status                	| INT       	|
+| dup_check                 	| INT       	|
+| track_check               	| INT       	|
+| pressure_bias             	| INT       	|
+| wave_period_indicator     	| INT       	|
+| swell_period_indicator    	| INT       	|
+| second_country_code       	| INT       	|
+| adaptive_qc_flags         	| STR       	|
+| nightday_flag             	| INT       	|
+| trimming_flags            	| STR       	|
+| ncdc_qc_flags             	| STR       	|
+| external                  	| INT       	|
+| landlocked_flag           	| INT       	|
+| source_exclusion_flags    	| INT       	|
+| unique_report_id          	| STR       	|
+| release_no_primary        	| INT       	|
+| release_no_secondary      	| INT       	|
+| release_no_tertiary       	| INT       	|
+| intermediate_reject_flag  	| INT       	|
+| timestamp                 	| OBJ       	|
+
+The dataset contains 75 individual features where most 
 
 <sub><b></b> arXiv Papers by Subject </sub>
 
