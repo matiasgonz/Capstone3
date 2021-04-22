@@ -11,13 +11,13 @@ def import_csv(year1, year2,cleaned):
             count = 0
             print(year_samp)
             #print(count)
-            while count+2 < len(os.listdir('Data/' + str(year_samp))):
+            while count+2 < len(os.listdir('../Data/' + str(year_samp))):
                 if count < 10:
-                    csv_file_list.append('Data/' + str(year_samp) + '/' + str(year_samp) + '_00000000000' + str(count))
+                    csv_file_list.append('../Data/' + str(year_samp) + '/' + str(year_samp) + '_00000000000' + str(count))
                     count += 1
                     #print(count)
                 else:
-                    csv_file_list.append('Data/' + str(year_samp) + '/' + str(year_samp) + '_0000000000' + str(count))
+                    csv_file_list.append('../Data/' + str(year_samp) + '/' + str(year_samp) + '_0000000000' + str(count))
                     count += 1
                     #print(count)
 
@@ -32,9 +32,9 @@ def import_csv(year1, year2,cleaned):
         for year_samp in range(year1, year2):
             count = 0
             print(year_samp)
-            print(count)
+            #print(count)
             while count < (year2 - year1):
-                csv_file_list.append('Data/' + str(year_samp) + '_new' + '.csv')
+                csv_file_list.append('../Data/' + str(year_samp) + '_new' + '.csv')
                 count += 1
 
         list_of_dataframes = []
@@ -45,3 +45,5 @@ def import_csv(year1, year2,cleaned):
         merged_df = pd.concat(list_of_dataframes)
 
     return(merged_df)
+
+  # drop all 0 hieght waves, drop al waves higher tahn 10, 

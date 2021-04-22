@@ -36,7 +36,7 @@ dataframe = import_csv(2007,2017,True)
     # axs = sns.distplot(dataframe['wave_height'])
     # axs.set_xlim(1,10)
 
-    #sow and save visualizations
+    #show and save visualizations
     plt.savefig('Visualizations/scatter_tempvsheight.png')
     plt.show()
 
