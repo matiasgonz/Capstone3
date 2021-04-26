@@ -19,9 +19,13 @@ def scatterplot(col1, col2, year1, year2, windspeed):
     figs, axs = plt.subplots()
 
     axs = sns.scatterplot(x=dataframe[str(col1)], y=dataframe[str(col2)])
-    plt.title(str(col1) + 'vs' + str(col2))
-    plt.xlabel(str(col1))
-    plt.ylabel(str(col2))
+    plt.title('Wave Height Vs. Wind Speed')
+    plt.xlabel('Wave Height')
+    plt.ylabel('Wind Speed')
+    plt.xlim([0,10])
+    
+    plt.savefig('../Visualizations/wind_speedvswave_height.png', dpi=400)
+
 
     plt.show()
 
@@ -49,20 +53,36 @@ def dist_plot(col, year1, year2):
 
     dataframe = import_csv(year1, year2, True)
 
-    figs, axs = plt.subplots()
+    sns.displot(dataframe, x=col, binwidth=0.5)
 
-    axs = sns.histplot(dataframe[str(col)])
+    plt.xlim([0,8])
+    plt.title('Wave Heigth Distribution')
+    plt.xlabel('Wave height (M)')
+    plt.ylabel('Count')
+
+    plt.savefig('../Visualizations/Dist_plot_wave_height.png', dpi=400)
 
     plt.show()
 
     return()
 
+
+    
 if __name__ == "__main__":
 
-    # dist_plot('wave_height', 2017, 2017)
-    dataframe = import_csv(2017, 2017, True)
+    print(scatterplot('wave_height', 'wind_speed', 2007, 2017, False))
 
-    print(dataframe.wave_height.value_counts())
+    # plot = dist_plot('wave_height', 2007, 2017)
+    # print(plot)
+    # plot.to_csv('../Visualizations/wave_height_dist.csv', index = False)
+
+
+
+    # dist_plot('wave_height', 2017, 2017)
+    # dataframe = import_csv(2017, 2017, True)
+
+    # print(dataframe.wave_height.value_counts())
+
 
 
     # scatterplot('wave_height', 'wind_speed_indicator', 2017, 2017, True)
@@ -119,11 +139,3 @@ if __name__ == "__main__":
     # plt.ylabel('wind_speed')
 
     # plt.show()
-
-  
-
-
-    
-
-
-    
